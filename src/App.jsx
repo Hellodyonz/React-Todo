@@ -20,18 +20,39 @@ const activityItems = [
 function App() {
 
   const [items,setItems] = useState(activityItems)
+  const [filterableitems, setFilterableitems] = useState(activityItems)
 
   function handleAddItem(item){
     setItems([...items, item])
+    setFilterableitems([...filterableitems, item])
   }
 
   function handleDeleteItem(id){
     setItems((items)=>items.filter((item) => item.id !== id))
+    setFilterableitems((items)=>items.filter((item) => item.id !== id))
   }
 
   function handleToggleItem(id){
     setItems((items) => items.map((item)=> item.id === id ? 
       {...item, checked: !item.checked}: item))
+    setFilterableitems((items) => items.map((item)=> item.id === id ? 
+      {...item, checked: !item.checked}: item))
+  }
+
+  function handleShowActive(){
+    console.log('active')
+    setItems(filterableitems)
+    setItems(filterableitems.filter(item => item.checked === false))
+  }
+
+  function handleShowCompleted(){
+    setItems(filterableitems)
+    setItems(filterableitems.filter(item => item.checked === true))
+  }
+
+  function handleShowAll(){
+    setItems(filterableitems)
+    console.log('All')
   }
 
   function handleEditItem(id){
@@ -43,9 +64,9 @@ function App() {
       <div className="">
         <Header/>
         <FormInput onAddItem={handleAddItem}/>
-        <ChipsFilter title='ALL'/>
-        <ChipsFilter title='Active'/>
-        <ChipsFilter title='Completed'/>
+        <ChipsFilter onCLick={handleShowAll} title='ALL'/>
+        <ChipsFilter onCLick={handleShowActive} title='Active'/>
+        <ChipsFilter onCLick={handleShowCompleted} title='Completed'/>
         <CheckboxContainer items={items} onDeleteItem={handleDeleteItem} onToggleItem={handleToggleItem} onEditItem={handleEditItem}/>
       </div>
     </div>
